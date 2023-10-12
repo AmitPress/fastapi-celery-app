@@ -34,6 +34,7 @@ jobs:
       - name: Activate Venv and Install Pip Packages
         run: |
           . venv/bin/activate
+          echo PATH=$PATH >> $GITHUB_ENV
           pip install -r requirements.txt
 
       - name: Run App
