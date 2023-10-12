@@ -22,5 +22,5 @@ jobs:
         working-directory: .
 
       - name: Run Pytest
-        run: docker-compose -f docker-compose.yaml exec pytest
+        run: docker-compose -f docker-compose.yaml exec pytest | cat
         working-directory: .
