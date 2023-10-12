@@ -35,7 +35,14 @@ jobs:
         run: |
           . venv/bin/activate
           pip install -r requirements.txt
-          uvicorn app.main:app --host 0.0.0.0 --port 5000
+
+      - name: Run App
+        run: uvicorn app.main:app --host 0.0.0.0 --port 5000
+
+      - name: Run Celery
+        run: |
           celery -A celery_config:celery_app worker --loglevel=info
           celery -A celery_config:celery_app beat
+      - name: Run Test
+        run: |
           pytest
