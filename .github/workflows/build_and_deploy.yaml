@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+      pg:
+        image: postgres:15-alpine
+        ports:
+          - 5432:5432
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+        environment:
+          POSTGRES_DB: aslpm
+          POSTGRES_USER: amit
+          POSTGRES_PASSWORD: 12345
+    volumes:
+      postgres_data:
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Install Python
+        run: |
+          apt update
+          apt install python3
+          apt install python3-pip
+
+      - name: Create Venv
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+      
+      - name: Install Pip Packages
+        run: |
+          pip3 install -r requirements.txt
+
+      - name: Run App
+          run: |
+           uvicorn app.main:app --host 0.0.0.0 --port 5000
+      
+      - name: Run Celery
+          run: |
+            celery -A celery_config:celery_app worker --loglevel=info
+            celery -A celery_config:celery_app beat
