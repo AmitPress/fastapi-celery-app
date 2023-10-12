@@ -33,9 +33,8 @@ jobs:
 
       - name: Activate Venv and Install Pip Packages
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           pip install -r requirements.txt
-        shell: bash
 
       - name: Run App
         run: uvicorn app.main:app --host 0.0.0.0 --port 5000
