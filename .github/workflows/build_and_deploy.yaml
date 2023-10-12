@@ -6,36 +6,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: python:3.10
+
     services:
       redis:
         image: redis:7-alpine
         ports:
           - 6379:6379
-      pg:
+      postgres:
         image: postgres:15-alpine
         ports:
           - 5432:5432
-        volumes:
-          - postgres_data:/var/lib/postgresql/data
-        environment:
+        env:
           POSTGRES_DB: aslpm
           POSTGRES_USER: amit
           POSTGRES_PASSWORD: 12345
-    volumes:
-      postgres_data:
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10
-
       - name: Create Venv
         run: python -m venv venv
         shell: bash
-       
+
       - name: Activate Venv and Install Pip Packages
         run: |
           source venv/bin/activate
