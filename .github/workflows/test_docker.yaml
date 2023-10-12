@@ -16,11 +16,13 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose -f docker-compose.yaml up -d
         working-directory: .
+      - name: Inspect Container Logs
+        run: docker logs asl-product-management
 
       - name: Wait for services to start
         run: docker-compose -f docker-compose.yaml ps
         working-directory: .
 
       - name: Run Pytest
-        run: docker-compose -f docker-compose.yaml exec asl-product-management pytest
+        run: docker-compose -f docker-compose.yaml exec pytest
         working-directory: .
